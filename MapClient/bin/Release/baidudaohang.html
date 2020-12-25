@@ -1,0 +1,327 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>
+公交导航的数据接口</title>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?key=59db371659c04947a1ff044e80565718&v=1.1&services=true">
+</script>
+
+
+<script src="jquery-1.3.2.min.js" type="text/javascript"></script>
+<style type="text/css">
+body, html,#container2D {width: 100%;height: 100%;overflow: hidden;margin:0;}
+#l-map{height:100%;width:78%;float:left;border-right:2px solid #bcbcbc;}
+#r-result{height:100%;width:20%;float:left;}
+</style>
+
+</head>
+<body>
+
+<div id="container2D"><div style="display:none" id="container3D" ></div></div></body>
+</html>
+
+
+<script type="text/javascript">
+    //2D地图缩放级别1~18级(18级最大)
+    //3D地图缩放级别15~20级(20级最大)
+
+    //************地图相关变量*****************
+    var cityName="";
+    var map;         //地图
+    var transit;     //步行导航
+    var message;     //弹出提示框
+    var gpsmarker;   //我的标注
+    var gpspoint;    //gps经纬度信息
+    var polygonMy;   //地图导航线(我当前的GPS位置与终点的线)
+    var geo;         //百度自带GPS定位对象
+
+    var arr_icon = new Array("direct_mapsearch_loc.png");   //页面上所用到的标注图片地址
+    var arr_trans=new Array();             //步行导航关键点经纬度集合
+
+    var time = 500;                       //线程执行时间,0.5秒获取Gps数据一次
+    var arrstep = new Array();                 //导航时我走过的轨迹
+    var mapt;         //地图类型(1.2d地图   2.3d地图)
+    var stepi = 0;
+    var runtimeout;     //导航完毕，结束运行
+    var endPoint;       //导航目标点
+    var downPoint;      //鼠标移动时记录经纬度
+    var zoonsize=15;    //地图放大级别
+
+    //获取我的GPS信息
+    function setMyGps(point) {
+        gpspoint = point;
+        return point;
+    }
+
+    //初始化地图
+    function initMap(type) {
+        var mapopts;
+         if (type == 1)   //2D
+        {
+            mapt = 1;
+            mapopts = { mapType: BMAP_NORMAL_MAP };
+            map = new BMap.Map("container2D", mapopts);
+            $("#container2D").show();
+            $("#container3D").hide();
+        }
+        else {
+            mapt = 2;
+            mapopts = { mapType: BMAP_PERSPECTIVE_MAP };
+            map = new BMap.Map("container3D", mapopts);
+            $("#container2D").hide();
+            $("#container3D").show();
+        }
+        //地图
+        transit = new BMap.WalkingRoute(map, {   //步行导航
+            renderOptions: { map: map }
+        });
+        transit.setSearchCompleteCallback(function(results) {
+            SearchCompleteCallback(results);
+        });
+        polygonMy = new BMap.Polyline();
+        message = new BMap.InfoWindow();
+        geo = new BMap.Geolocation();
+        map.setCurrentCity("福州");          // 设置地图显示的城市 此项是必须设置的
+	    map.centerAndZoom(new BMap.Point(119.318062,26.089746), 15);
+        map.addControl(new BMap.ScaleControl());
+        map.addControl(new BMap.OverviewMapControl());
+        map.enableScrollWheelZoom(true);
+        //鼠标移动更新经纬度
+        map.addEventListener("mousemove",function(e){downPoint = e.point;
+        //地图放大缩小监听事件
+        map.addEventListener("zoomend", function(){
+        zoonsize=this.getZoom();
+        });
+    });
+	
+	function myFun(result){
+    		var cityName = result.name;
+    		map.setCenter(cityName);
+    		//alert(cityName);
+	}
+	var myCity = new BMap.LocalCity();
+	myCity.get(myFun);
+        var ctrl_nav = new BMap.NavigationControl({ anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_LARGE });
+        map.addControl(ctrl_nav);
+
+        map.enableDragging(); //启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom(); //启用地图滚轮放大缩小
+        map.enableDoubleClickZoom(); //启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard(); //启用键盘上下左右键移动地图
+
+        map.enableScrollWheelZoom(true);
+
+	
+}
+
+    //显示提示框信息
+    function showmessage(title,content,point) {
+    
+        message.setWidth(300);
+        message.setHeight(100);
+        message.redraw();   //重绘信息窗口，当信息窗口内容发生变化时进行调用
+        message.setTitle(title);
+        message.setContent(content);
+
+        message.disableMaximize();   //禁用窗口最大化功能
+        message.enableAutoPan();     //开启打开信息窗口时地图自动平移
+        map.openInfoWindow(message, point);
+     }
+
+    //显示我的信息
+    function showmymessage(title, content) {
+        if (gpspoint != null) {
+            message.setWidth(300);
+            message.setHeight(100);
+            message.redraw();   //重绘信息窗口，当信息窗口内容发生变化时进行调用
+            message.setTitle(title);
+            message.setContent(content);
+
+            message.disableMaximize();   //禁用窗口最大化功能
+            message.enableAutoPan();     //开启打开信息窗口时地图自动平移
+            map.openInfoWindow(message, gpspoint);
+        }
+    }
+
+    //添加标注
+    function addmarker(title, content, point) {
+    
+        var myIcon = new BMap.Icon("sit.ico", new BMap.Size(16,16));
+        var marker = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+        map.addOverlay(marker);
+
+        marker.addEventListener("click", function() {
+            showmessage(title, content, point);
+        });
+        return marker;
+    }
+
+    function SearchCompleteCallback(results) {
+        
+        
+        
+        //如果查询步行线路成功
+        if (transit.getStatus() == BMAP_STATUS_SUCCESS) {
+            var NumPlans = results.getNumPlans();               //总方案数
+            if (NumPlans > 0) {
+                var Plan = results.getPlan(0);                //选择第一条步行方案
+                var NumRoutes = Plan.getNumRoutes();          //返回方案包含的线路的个数
+                for (var i = 0; i < NumRoutes; i++) {
+                    var Route = Plan.getRoute(i);              //一条驾车或步行路线
+                    // 判断步行线路有可能为0
+                    if (Route.getDistance(false) > 0) {
+
+    
+                    
+                        if (Route.getRouteType() == BMAP_ROUTE_TYPE_WALKING) {            //判断是否是步行路线
+                            var NumSteps = Route.getNumSteps();   //返回路线包含的关键点个数
+                            for (var j = 0; j < NumSteps; j++) {
+                                var Step = Route.getStep(j);
+                                if (j == 0) {
+                                    gpsmarker = new BMap.Marker(Step.getPoint());   //新增标注
+                                    var ico = new BMap.Icon(arr_icon[0], { width: 20, height: 20 });
+                                    gpsmarker.setIcon(ico);
+                                    map.addOverlay(gpsmarker);
+                                    var address="";
+                                    gpsmarker.addEventListener("click", function() {
+                                        //-------------------------
+                                        var gc = new BMap.Geocoder();  
+                                        
+                                        //var pt = new BMap.Point(Step.getPoint().lng,Step.getPoint().lat);
+                                        
+	                                    gc.getLocation(downPoint, function(rs){
+                                            var addComp = rs.addressComponents;
+                                            
+                                            address=addComp.province+ addComp.city  + addComp.district + addComp.street+ addComp.streetNumber;
+                                           // alert(address);
+                                            showmymessage("GPS正在导航:经度：" + downPoint.lng + "；维度：" + downPoint.lat, "当前位置："+address);
+                                            
+                                        });
+                                        //---------------------------
+                                            
+                                    });
+                                }
+                                arr_trans[j] = new Array(2);
+                                arr_trans[j][0] = Step.getPoint();
+                                arr_trans[j][1] = Step.getDescription();
+                                addmarker("第"+(j+1)+"步", Step.getDescription(), Step.getPoint());
+                            }
+                            if (NumSteps > 0) {
+                                endPoint = Route.getStep(NumSteps - 1).getPoint();
+
+                                if (mapt == 1)
+                                    transit.enableAutoViewport();
+                                else {
+                                    map.setCenter(Route.getStep(0).getPoint());
+                                    map.zoomTo(18)
+                                }
+                            }
+                            setrun(Route.getPoints(), gpsmarker);
+                        }
+                    }
+                }
+            }
+            else {
+
+            }
+        }
+    }
+
+
+
+    function setrun(points, marker) {       
+        if (stepi < points.length) {
+            arrstep[stepi] = points[stepi];
+            marker.setPoint(arrstep[stepi]);
+            setMyGps(arrstep[stepi]);
+            map.centerAndZoom(arrstep[stepi],zoonsize);
+            runtimeout = window.setTimeout(function() {
+                setrun(points, marker);
+            }, time);
+ //           var polygon = new BMap.Polyline(arr, { lineColor: "yellow" });
+ //           map.addOverlay(new BMap.Polyline(arr, polygon));
+
+            var nowarr = new Array();
+            nowarr.push(arrstep[stepi]);
+            nowarr.push(endPoint);
+
+            //if (polygonMy!=null)
+
+            map.removeOverlay(polygonMy);
+            polygonMy.setPoints(nowarr);
+            polygonMy.setStrokeColor("white");
+
+            polygonMy.setStrokeWeight(0.001);
+            map.addOverlay(polygonMy);
+            stepi++;
+            //time += 1000;
+        }
+        else
+            remove();
+    }
+
+function remove() {
+    if (runtimeout) {
+        clearTimeout(runtimeout);
+        delete runtimeout;
+    }
+}  
+
+function getDistance(lng1, lat1, lng2, lat2) {    
+    var s;
+    var radLat1;
+    var radLat2;
+    var a;
+    var b;
+
+    radLat1 = lat1 * Math.PI / 180.0;
+    radLat2 = lat2 * Math.PI / 180.0;
+    a = radLat1 - radLat2;
+    b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0;
+
+    s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+             Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+    s = s * 6378.137;
+    s = Math.round(s * 10000, 3) / 10000;
+    return round(s * 1000, 0);
+}
+
+//四舍五入方法v要计算的数值，e保留多少位
+function round(v, e) {
+    var t = 1;
+    for (; e > 0; t *= 10, e--);
+    for (; e < 0; t /= 10, e++);
+    return Math.round(v * t) / t;
+}
+
+function daohang(starAddress,endAddress) {
+    //initMap(1);
+    
+	map.clearOverlays();
+	stepi = 0;
+	transit.search(cityName+starAddress, cityName+endAddress);
+	zoonsize=21;
+}
+function Map2or3(type){
+	initMap(type);
+}
+$(document).ready(function() {
+    initMap(1);
+
+    //alert(getDistance(121.449838, 31.228232, 121.449538, 31.228132));
+    $("#btn").click(function() {
+        map.clearOverlays();
+        stepi = 0;
+        
+        
+        transit.search($("#text1").val(), $("#text2").val());
+    });
+    $("#btn2d").click(function() {
+        initMap(1);
+    });
+    $("#btn3d").click(function() {
+        initMap(2);
+    });
+});
+</script>

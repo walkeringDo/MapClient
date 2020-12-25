@@ -1,0 +1,49 @@
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\MapClient.exe
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\MapClient.pdb
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\ResolveAssemblyReference.cache
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.Form1.resources
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.Properties.Resources.resources
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.csproj.GenerateResource.Cache
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.exe
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.pdb
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.exe.licenses
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\DevComponents.Instrumentation.dll
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\DevComponents.TreeGX.dll
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\SideBar.dll
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\DevComponents.DotNetBar2.dll
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\MapClient.exe.manifest
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\bin\Debug\MapClient.application
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.TrustInfo.xml
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.exe.manifest
+F:\软件案例Demo\毕业设计\BaiduMap\MapClient\MapClient\obj\Debug\MapClient.application
+C:\Users\wen\Desktop\MapClie22nt\MapClient\bin\Debug\MapClient.exe.manifest
+C:\Users\wen\Desktop\MapClie22nt\MapClient\bin\Debug\MapClient.application
+C:\Users\wen\Desktop\MapClie22nt\MapClient\bin\Debug\MapClient.exe
+C:\Users\wen\Desktop\MapClie22nt\MapClient\bin\Debug\MapClient.pdb
+C:\Users\wen\Desktop\MapClie22nt\MapClient\bin\Debug\CSkin.dll
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.FrmBaidu.resources
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.FrmMain.resources
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.Properties.Resources.resources
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.csproj.GenerateResource.Cache
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.TrustInfo.xml
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.exe.manifest
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.application
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.exe
+C:\Users\wen\Desktop\MapClie22nt\MapClient\obj\Debug\MapClient.pdb
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.FrmBaidu.resources
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.FrmMain.resources
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.Properties.Resources.resources
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.csproj.GenerateResource.cache
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.csproj.CoreCompileInputs.cache
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.TrustInfo.xml
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.exe
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.pdb
+E:\c# project\gis\MapClient\MapClient\bin\Debug\MapClient.exe.manifest
+E:\c# project\gis\MapClient\MapClient\bin\Debug\MapClient.application
+E:\c# project\gis\MapClient\MapClient\bin\Debug\MapClient.exe
+E:\c# project\gis\MapClient\MapClient\bin\Debug\MapClient.pdb
+E:\c# project\gis\MapClient\MapClient\bin\Debug\CSkin.dll
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.csprojAssemblyReference.cache
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.exe.manifest
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.application
+E:\c# project\gis\MapClient\MapClient\obj\Debug\MapClient.csproj.CopyComplete
